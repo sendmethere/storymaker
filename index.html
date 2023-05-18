@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="./style.css">
+  </head>
+  <body>
+    <div class="container">
+
+
+    </div>
+  </body>
+</html>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script>
+      
+    $( function() {
+      $( ".draggable").draggable({containment: "parent"});
+    } );
+  
+  function touchHandler(event)
+
+{
+    var touches = event.changedTouches,
+        first = touches[0],
+        type = "";
+    switch(event.type)
+    {
+        case "touchstart": type = "mousedown"; break;
+        case "touchmove":  type = "mousemove"; break;        
+        case "touchend":   type = "mouseup";   break;
+        default:           return;
+    }
+
+    // initMouseEvent(type, canBubble, cancelable, view, clickCount, 
+    //                screenX, screenY, clientX, clientY, ctrlKey, 
+    //                altKey, shiftKey, metaKey, button, relatedTarget);
+
+    var simulatedEvent = document.createEvent("MouseEvent");
+    simulatedEvent.initMouseEvent(type, true, true, window, 1, 
+                                  first.screenX, first.screenY, 
+                                  first.clientX, first.clientY, false, 
+                                  false, false, false, 0/*left*/, null);
+
+    first.target.dispatchEvent(simulatedEvent);
+    event.preventDefault();
+}
+
+ 
+$(()=>{
+    document.addEventListener("touchstart", touchHandler, true);
+    document.addEventListener("touchmove", touchHandler, true);
+    document.addEventListener("touchend", touchHandler, true);
+    document.addEventListener("touchcancel", touchHandler, true);    
+});
+  
+    const card_images = []
+    const number_of_cards = 6;
+    for(i=1;i<=number_of_cards;i++){
+        card_images.push({no: 1, src: i+'.png'});
+    }
+    card_images.forEach((item, index)=>{
+        $('.container').append(`
+            <div class="draggable card" 
+            card-no="${index+1}" 
+            style="
+                background-image:url('./img/${index+1}.png'); 
+                background-size: contain;  
+                "></div>
+        `)
+    });  
+</script>
